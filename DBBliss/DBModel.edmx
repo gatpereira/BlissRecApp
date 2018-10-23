@@ -1,0 +1,143 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="BlissDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="DT_CHOICE">
+          <Key>
+            <PropertyRef Name="CHOICE_ID" />
+          </Key>
+          <Property Name="CHOICE_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CHOICE_DESCRIPTION" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="CHOICE_QUESTION_ID" Type="int" Nullable="false" />
+          <Property Name="CHOICE_VOTES" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="DT_QUESTION">
+          <Key>
+            <PropertyRef Name="QUESTION_ID" />
+          </Key>
+          <Property Name="QUESTION_ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="QUESTION_DESCRIPTION" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="QUESTION_IMG_URL" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="QUESTION_THUMB_URL" Type="varchar" MaxLength="255" />
+          <Property Name="QUESTION_PUBLISHED" Type="datetime" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_CHOICE_QUESTION">
+          <End Role="DT_QUESTION" Type="Self.DT_QUESTION" Multiplicity="1" />
+          <End Role="DT_CHOICE" Type="Self.DT_CHOICE" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DT_QUESTION">
+              <PropertyRef Name="QUESTION_ID" />
+            </Principal>
+            <Dependent Role="DT_CHOICE">
+              <PropertyRef Name="CHOICE_QUESTION_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="BlissDBModelStoreContainer">
+          <EntitySet Name="DT_CHOICE" EntityType="Self.DT_CHOICE" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="DT_QUESTION" EntityType="Self.DT_QUESTION" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_CHOICE_QUESTION" Association="Self.FK_CHOICE_QUESTION">
+            <End Role="DT_QUESTION" EntitySet="DT_QUESTION" />
+            <End Role="DT_CHOICE" EntitySet="DT_CHOICE" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="BlissDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="DT_CHOICE">
+          <Key>
+            <PropertyRef Name="CHOICE_ID" />
+          </Key>
+          <Property Name="CHOICE_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CHOICE_DESCRIPTION" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="CHOICE_QUESTION_ID" Type="Int32" Nullable="false" />
+          <Property Name="CHOICE_VOTES" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="DT_QUESTION" Relationship="Self.FK_CHOICE_QUESTION" FromRole="DT_CHOICE" ToRole="DT_QUESTION" />
+        </EntityType>
+        <EntityType Name="DT_QUESTION">
+          <Key>
+            <PropertyRef Name="QUESTION_ID" />
+          </Key>
+          <Property Name="QUESTION_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="QUESTION_DESCRIPTION" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="QUESTION_IMG_URL" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="QUESTION_THUMB_URL" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="QUESTION_PUBLISHED" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="DT_CHOICE" Relationship="Self.FK_CHOICE_QUESTION" FromRole="DT_QUESTION" ToRole="DT_CHOICE" />
+        </EntityType>
+        <Association Name="FK_CHOICE_QUESTION">
+          <End Role="DT_QUESTION" Type="Self.DT_QUESTION" Multiplicity="1" />
+          <End Role="DT_CHOICE" Type="Self.DT_CHOICE" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="DT_QUESTION">
+              <PropertyRef Name="QUESTION_ID" />
+            </Principal>
+            <Dependent Role="DT_CHOICE">
+              <PropertyRef Name="CHOICE_QUESTION_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="BlissDBEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="DT_CHOICE" EntityType="Self.DT_CHOICE" />
+          <EntitySet Name="DT_QUESTION" EntityType="Self.DT_QUESTION" />
+          <AssociationSet Name="FK_CHOICE_QUESTION" Association="Self.FK_CHOICE_QUESTION">
+            <End Role="DT_QUESTION" EntitySet="DT_QUESTION" />
+            <End Role="DT_CHOICE" EntitySet="DT_CHOICE" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="BlissDBModelStoreContainer" CdmEntityContainer="BlissDBEntities">
+          <EntitySetMapping Name="DT_CHOICE">
+            <EntityTypeMapping TypeName="BlissDBModel.DT_CHOICE">
+              <MappingFragment StoreEntitySet="DT_CHOICE">
+                <ScalarProperty Name="CHOICE_ID" ColumnName="CHOICE_ID" />
+                <ScalarProperty Name="CHOICE_DESCRIPTION" ColumnName="CHOICE_DESCRIPTION" />
+                <ScalarProperty Name="CHOICE_QUESTION_ID" ColumnName="CHOICE_QUESTION_ID" />
+                <ScalarProperty Name="CHOICE_VOTES" ColumnName="CHOICE_VOTES" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="DT_QUESTION">
+            <EntityTypeMapping TypeName="BlissDBModel.DT_QUESTION">
+              <MappingFragment StoreEntitySet="DT_QUESTION">
+                <ScalarProperty Name="QUESTION_ID" ColumnName="QUESTION_ID" />
+                <ScalarProperty Name="QUESTION_DESCRIPTION" ColumnName="QUESTION_DESCRIPTION" />
+                <ScalarProperty Name="QUESTION_IMG_URL" ColumnName="QUESTION_IMG_URL" />
+                <ScalarProperty Name="QUESTION_THUMB_URL" ColumnName="QUESTION_THUMB_URL" />
+                <ScalarProperty Name="QUESTION_PUBLISHED" ColumnName="QUESTION_PUBLISHED" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

@@ -1,0 +1,90 @@
+﻿@model BlissRecApp.ViewModels.QuestionModel
+
+<div id="ViewBodyDeatils" style="padding-top:50px">
+   
+    <div id="divIDshare" hidden>@Model.ID</div>
+    <label style="font-size:16px" id="labelDescriptionShare">Details: @Model.description</label>
+
+    @foreach (var choice in Model.choices)
+    {
+        <div class="col-xs-12 col-md-12" style="padding-top:15px">
+            <div class="col-xs-12 col-md-5">@choice.Description</div>
+            <div class="col-xs-12 col-md-5">@choice.Votes</div>
+        </div>
+    }
+
+    <div class="col-xs-12 col-md-12"><label style="font-size:14px; padding-top:50px; padding-bottom:50px">Click to vote</label></div>
+ 
+
+    @foreach (var choice in Model.choices)
+    {
+        <div style="cursor:pointer; padding-top:20px; padding-left:50px" data-id="@choice.ID" onclick="vote(this)" data-url="@Url.Action("Vote", "Question")">
+            @choice.Description
+        </div>
+        <div style="padding-top:50px"></div>
+    }
+
+    <input type="button" value="Share" data-url="@Url.Action("Share","Question")" onclick="ShareQuestion(this)" />
+
+
+</div>
+
+
+
+<div class="col-xs-12 col-md-12">
+    <div class="col-xs-12 col-md-5">
+
+    </div>
+    <div class="col-xs-12 col-md-2">
+        <a onclick="Back()">Go Back</a>
+    </div>
+    <div class="col-xs-12 col-md-5">
+
+    </div>
+</div>
+
+ 
+
+
+<script>
+
+    function Back() {
+        window.history.back();
+    };
+
+    function ShareQuestion(t) {
+    debugger
+    var link = '@Html.Raw(Url.Action("Share", "Question", new { page = "", infoType = "details", search = "",  id = "replace" }))';
+        link = link.replace("replace", $("#divIDshare").text());
+    window.location.href = link;
+    }
+
+
+
+    function vote(t) {
+        debugger
+        var ID = $(t).data("id");
+        var Url = $(t).data("url");
+
+        $.ajax({
+            url: Url,
+            dataType: "html",
+            data: { id: ID },
+            method: "GET",
+            cache: false,
+            contentType: "application/json charset=utf-8"
+        }).done(function (result) {
+            location.reload();
+
+            result = JSON.parse(result);
+
+
+        }).fail(function (jqXHR, textStatus) {
+
+        })
+    };
+
+
+
+
+</script>

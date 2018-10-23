@@ -1,0 +1,70 @@
+﻿@model BlissRecApp.ViewModels.QuestionModel
+
+<div id="ShareSearchScreen">
+
+    <div id="SearchedValue" hidden>@Model.search</div>
+    @foreach (var question in Model.questionSearchResult)
+    {
+
+
+        <div id="@question.ID" data-id="@question.ID" style="cursor: pointer;" onclick="details(this)">
+
+
+            <div><label id="@Model.ID">@Model.ID</label></div>
+
+            <div class="col-xs-12 col-md-12">
+                <label style="align-content: center">Description: @question.Description</label>
+            </div>
+            <div class="col-xs-12 col-md-3">
+                <table>
+                    <tr>
+                        <td><img src="~/Art/@question.Image_Url" style="max-width: 75px; max-height:75px" /></td>
+                    </tr>
+                    <tr>
+                        <td>Thumb @question.Thumb_Url</td>
+
+                    </tr>
+                    <tr>
+                        <td>Published at @question.Published</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col-xs-12 col-md-9">
+                <table>
+                    <tr>
+                        @foreach (var choice in question.Choices)
+                        {
+                            <td>
+                                <div class="col-xs-12 col-md-7">@choice.Description</div>
+                            </td>
+                        }
+                    </tr>
+                </table>
+            </div>
+            <div class="row">
+                <div class="col-xs-12 col-md-2"><a href="#">Details</a></div>
+
+            </div>
+
+            <div style="padding-bottom: 30px"></div>
+        </div>
+    }
+    <div class="col-xs-12 col-md-12" style="padding-top:100px">
+        <div class="col-xs-12 col-md-5"></div>
+
+        <div class="col-xs-12 col-md-2">
+
+
+            <label>Back</label>
+
+            <label id="pageSearch">@Model.page</label> of <label id="totalPages">@Model.totalPages</label>
+
+            <label>Next</label>
+
+        </div>
+        <div class="col-xs-12 col-md-5" />
+    </div>
+
+</div>
+
+

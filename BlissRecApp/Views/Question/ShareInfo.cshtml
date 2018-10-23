@@ -1,0 +1,82 @@
+﻿@model BlissRecApp.ViewModels.QuestionModel
+
+
+<div id="ViewShareBody" style="padding-top:50px">
+
+    <label id="SharePage" hidden>@Model.page</label>
+
+    <label id="ShareSearch" hidden>@Model.search</label>
+    <label id="ShareID" hidden>@Model.ID</label>
+    <label id="ShareType" hidden>@Model.type</label>
+
+    <div class="col-xs-12 col-md-12">
+        <div>
+            <input type="text" id="Email" />
+            <input type="button" value="send" data-url="@Url.Action("SendEmail", "Question")" onclick="Send(this)" /> <label>Not Working... Can't connect to SMTP server</label>
+        </div>
+    </div>
+
+    <div id="View_ShareDetaisScreen">
+        @{Html.RenderAction("RenderDetailsScreen", "Question"); }
+    </div>
+
+    <div id="View_ShareSearchScreen">
+        @{Html.RenderAction("RenderSearchScreen", "Question"); }
+    </div>
+
+    <div class="col-xs-12 col-md-12">
+        <div class="col-xs-12 col-md-5">
+
+        </div>
+        <div class="col-xs-12 col-md-2">
+            <a onclick="Back()">Go Back</a>
+        </div>
+        <div class="col-xs-12 col-md-5">
+
+        </div>
+    </div>
+    
+
+</div>
+
+<script>
+
+    function Back() {
+        window.history.back();
+    }
+
+    function Send(t) {
+        debugger
+
+
+        var Page = $("#SharePage").text();
+        var InfoType = $("#ShareType").text();
+        var Search = $("#ShareSearch").text();
+        var Id = $("#ShareID").text();
+        var Address = $("#Email").val();
+     
+        var Url = $(t).data("url");
+
+
+        $.ajax({
+            url: Url,
+            dataType: "html",
+            method: "GET",
+            data: { page: Page, infoType: InfoType, search: Search, id: Id, address: Address },
+            cache: false,
+            contentType: "application/json; charset=utf-8"
+        }).done(function(json){
+            var Result = jQuery.parseJSON(json);
+            if (Result.data === true) {
+                alert("DONE");
+
+            } else {
+                alert("NOT DONE");
+            }
+
+            });
+
+    };
+      
+
+</script>

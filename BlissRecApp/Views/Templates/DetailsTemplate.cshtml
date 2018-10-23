@@ -1,0 +1,28 @@
+﻿@model BlissRecApp.ViewModels.QuestionModel
+
+<div id="ShareDetaisScreen" style="padding-top:50px">
+
+    <div id="divIDshare" hidden>@Model.ID</div>
+    <label style="font-size:16px" id="labelDescriptionShare">Details: @Model.description</label>
+
+    @foreach (var choice in Model.choices)
+    {
+        <div class="col-xs-12 col-md-12">
+            <div class="col-xs-12 col-md-5">@choice.Description</div>
+            <div class="col-xs-12 col-md-5">@choice.Votes</div>
+        </div>
+    }
+
+    <div class="col-xs-12 col-md-12"><label style="font-size:14px; padding-top:50px">Click to vote</label></div>
+
+    @foreach (var choice in Model.choices)
+    {
+        <div style="padding-top:20px" data-id="@choice.ID">
+            @choice.Description
+        </div>
+        <div style="padding-top:50px"></div>
+    }
+
+
+</div>
+

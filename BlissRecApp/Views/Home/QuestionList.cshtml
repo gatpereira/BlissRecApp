@@ -1,0 +1,188 @@
+﻿@model BlissRecApp.ViewModels.QuestionModel
+
+<div id="ViewBody" style="padding-top:50px">
+
+    <div id="toHide">
+        <div class="row">
+            <div class="col-xs-12 col-md-12"></div>
+            <div class="col-xs-12 col-md-3"></div>
+            <div class="col-xs-12 col-md-3"><input type="text" placeholder="Search" id="inputSearch" /></div>
+            <div class="col-xs-12 col-md-3"><input type="button" placeholder="Search" id="buttonSearch" value="Search" data-url="@Url.Action("Search","Home")" onclick="searchQuestion(this)" /></div>
+        </div>
+        <div style="padding-top:20px"></div>
+        <div id="InfoInit" hidden>
+            <label id="labelInfoInit"></label>
+        </div>
+
+        <div id="Results">
+            @foreach (var question in Model.questionSearchResult)
+            {
+                <div id="@question.ID" data-id="@question.ID" style="cursor: pointer; background-color:lightblue" onclick="details(this)">
+
+
+                    <div><label id="@Model.ID">@Model.ID</label></div>
+
+                    <div class="col-xs-12 col-md-12">
+                        <label style="align-content: center">Description: @question.Description</label>
+                    </div>
+                    <div class="col-xs-12 col-md-3">
+                        <table>
+                            <tr>
+                                <td><img src="~/Art/@question.Image_Url" style="max-width: 75px; max-height:75px" /></td>
+                            </tr>
+                            <tr>
+                                <td>Thumb @question.Thumb_Url</td>
+
+                            </tr>
+                            <tr>
+                                <td>Published at @question.Published</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-xs-12 col-md-9">
+                        <table>
+                            <tr>
+                                @foreach (var choice in question.Choices)
+                                {
+                                    <td>
+                                        <div class="col-xs-12 col-md-7">@choice.Description</div>
+                                    </td>
+                                }
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <div>
+                    <a id="@question.ID" data-id="@question.ID" onclick="updateQuestion(this)" href="#">Update</a>
+                </div>
+
+                <div style="padding-top:30px"></div>
+            }
+        </div>
+
+
+
+        <div class="col-xs-12 col-md-12" style="padding-top:100px">
+            <div class="col-xs-12 col-md-5"></div>
+
+            <div class="col-xs-12 col-md-2">
+
+                @if (Model.page > 1)
+                {
+                    <a href="#" id="goBack" data-url="@Url.Action("Navigate","Home")" onclick="goNextInit(this)">Back</a>
+                }
+
+                <label id="pageInit">@Model.page</label> of <label id="totalPages">@Model.totalPages</label>
+
+                @if (Model.page < Model.totalPages)
+                {
+                    <a href="#" id="goNext" data-url="@Url.Action("Navigate","Home")" onclick="goNextInit(this)">Next</a>
+                }
+
+            </div>
+            <div class="col-xs-12 col-md-5" />
+        </div>
+    </div>
+</div>
+
+<div id="ResultsFomSearch" hidden>
+
+</div>
+
+<script>
+
+    function updateQuestion(t) {
+
+    var link = '@Url.Action("CreateUpdateQuestion", "Question", new { id = "replace" })';
+    link = link.replace("replace", $(t).data("id"));
+    window.location.href = link;
+    }
+
+    function goNextInit(t) {
+        debugger
+        var Page = $("#pageInit").text();
+        var Nagivate = $(t).text();
+        var url = $(t).data("url");
+        $.ajax({
+            url: url,
+            dataType: "html",
+            method: "GET",
+            data: { page: Page, navigate: Nagivate },
+            cache: false,
+            contentType: "application/json; charset=utf-8"
+        }).done(function (result) {
+
+            $("#ViewBody").html(result);
+        }).fail(function (jqXHR, textStatus) {
+            debugger
+        })
+    };
+
+    function details(t) {
+    debugger
+    var link = '@Url.Action("ShowDetails", "Question", new { id = "replace" })';
+    link = link.replace("replace", $(t).data("id"));
+    window.location.href = link;
+    }
+
+    function searchQuestion(t) {
+        debugger
+        var Search = $("#inputSearch").val();
+        var Url = $(t).data("url");
+        var Page = "";
+        var Navigate = "";
+        $.ajax({
+            url: Url,
+            dataType: "html",
+            method: "GET",
+            data: { page: Page, navigate: Navigate, search: Search },
+            cache: false,
+            contentType: "application/json; charset=utf-8"
+        }).done(function (result) {
+            $("#toHide").hide();
+
+
+            $("#ResultsFomSearch").show();
+            $("#ResultsFomSearch").html(result);
+
+            })
+    };
+
+    function goNextSearch(t) {
+        debugger
+        var Page = $("#pageSearch").text();
+        var Search = $("#SearchedValue").text();
+        var Nagivate = $(t).text();
+        var url = $(t).data("url");
+        $.ajax({
+            url: url,
+            dataType: "html",
+            method: "GET",
+            data: { page: Page, navigate: Nagivate, search: Search },
+            cache: false,
+            contentType: "application/json; charset=utf-8"
+        }).done(function (result) {
+
+            $("#toHide").hide();
+            $("#ResultsFomSearch").show();
+            $("#ResultsFomSearch").html(result);
+        }).fail(function (jqXHR, textStatus) {
+            debugger
+        })
+    };
+
+    function ShareSearch(t) {
+        debugger
+        var Page = $("#pageSearch").text();
+        var Search = $("#SearchedValue").text();
+
+        var link = '@Html.Raw(Url.Action("Share", "Question", new {infoType = "search", page = "ReplacePage", search = "ReplaceSearch", id = "" }))';
+        link = link.replace("ReplacePage", Page);
+        link = link.replace("ReplaceSearch", Search);
+        window.location.href = link;
+    }
+
+
+
+</script>
